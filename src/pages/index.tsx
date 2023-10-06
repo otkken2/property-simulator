@@ -11,7 +11,7 @@ export default function Home() {
   const [inshizei, setInshizei] = useState(0);
   const [tourokumenkyozei, setTourokumenkyozei] = useState(0);
   const [hudousansyutokuzei, setHudousansyutokuzei] = useState(0);
-  const SHIHOUSHOSHI_HOUSYU = 10;
+  const SHIHOUSHOSHI_HOUSYU = 5;
 
   useEffect(()=>{
     setTotalResult(tyukai+inshizei+tourokumenkyozei+hudousansyutokuzei + SHIHOUSHOSHI_HOUSYU);
