@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { useEffect, useState } from "react"
+import { ButtonPrimary } from "../../components/ButtonPrimary";
 
 
 export default function Home() {
@@ -12,6 +14,15 @@ export default function Home() {
   const [tourokumenkyozei, setTourokumenkyozei] = useState(0);
   const [hudousansyutokuzei, setHudousansyutokuzei] = useState(0);
   const SHIHOUSHOSHI_HOUSYU = 5;
+
+  {/* //入力項目 : 月額家賃収入(必須)、管理費、固定資産税(必須)、都市計画税(必須)*/}
+  const [monthlyRentIncome, setMonthlyRentIncome] = useState<number | undefined>();
+  const [managementFee, setManagementFee] = useState<number | undefined>();
+  const [fixedAssetTax, setFixedAssetTax] = useState<number | undefined>();
+  const [cityPlanningTax, setCityPlanningTax] = useState<number | undefined>();
+  const [realRent, setRealRent] = useState<number | undefined>();
+
+  const [realRateOfReturn, setRealRateOfReturn] = useState<number | undefined>();
 
   useEffect(()=>{
     setTotalResult(tyukai+inshizei+tourokumenkyozei+hudousansyutokuzei + SHIHOUSHOSHI_HOUSYU);
@@ -128,58 +139,137 @@ export default function Home() {
     setShowResults(true);
   };
 
+  const calcRealRateOfReturn = () => {
+    // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
+    // 実質購入費用 = 売買価格 + 諸費用
+    if(propertyPrice === undefined || propertyPrice < 0)return;
+    if(realRent === undefined || realRent < 0)return;
+
+    console.log("realRent", realRent);
+    setRealRateOfReturn(realRent / (propertyPrice + totalResult) * 100)
+    return 
+  };
+
+  // 実質家賃収入を計算する関数
+  const calcRealRent = () => { 
+    if(monthlyRentIncome === undefined || monthlyRentIncome < 0)return;
+    if(managementFee === undefined || managementFee < 0)return;
+    if(fixedAssetTax === undefined || fixedAssetTax < 0)return;
+    if(cityPlanningTax === undefined || cityPlanningTax < 0)return;
+
+    const result = (monthlyRentIncome - managementFee)*12 - fixedAssetTax - cityPlanningTax;
+    setRealRent(result);
+    calcRealRateOfReturn();
+  };
+
+  console.log(monthlyRentIncome);
+  console.log(managementFee);
+  console.log(fixedAssetTax);
+  console.log(cityPlanningTax);
+
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center bg-white text-black p-5`}
+      className={`flex min-h-screen flex-col items-center bg-white text-black`}
     >
-      <h1 className=" font-bold text-2xl">物件購入諸費用シミュレーター</h1>
-      <div className="mb-5 flex flex-col">
-        <label htmlFor="">物件価格を入力してください。</label>
-        <div>
-          <input type="text"  value={propertyPrice} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => handleChangePropertyPrice(e)}/>
-          <span className="pl-1">万円</span>
-        </div>
-      </div>
-      <div className="mb-5 flex flex-col">
-        <label htmlFor="">固定資産税評価額を入力してください。</label>
-        <div>
-          <input type="text"  value={koteiShisanZeiHyoukaGaku} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => handleChangeKoteiShisanZeiHyoukaGaku(e)}/>
-          <span className="pl-1">万円</span>
-        </div>
-      </div>
-      <button onClick={() => handleCalcResults()} className="mb-20 bg-sky-400 text-white px-5 py-2 rounded-2xl w-[340px]">計算結果を表示する</button>
       {
-        showResults && 
-        <div>
-          <div className="flex bg-red-200 w-[340px] justify-between items-center">
-            <p>仲介手数料</p>
-            <p className=" text-2xl">{tyukai}万円</p>
-          </div>
-          <div className="bg-blue-200 flex justify-between w-[340px] items-center">
-            <p>印紙税</p>
-            <p className="text-2xl">{inshizei}万円</p>
-          </div>
-          <div className="bg-green-200 flex w-[340px] justify-between items-center">
-            <p>司法書士報酬</p>
-            <p className="text-2xl">{SHIHOUSHOSHI_HOUSYU}万円(仮)</p>
-          </div>
-          <div className="bg-yellow-200 flex justify-between w-[340px] items-center">
-            <p>登録免許税</p>
-            <p className="text-2xl ">{tourokumenkyozei}万円</p>
-          </div>
-          <div className=" bg-emerald-200 flex justify-between w-[340px] items-center">
-            <p>不動産取得税</p>
-            <p className="text-2xl">{hudousansyutokuzei}万円</p>
-          </div>
+        
+        <>
+        
+          <div className="h-screen w-screen items-center flex flex-col justify-center">
+            <h2 className=" font-bold text-2xl">物件購入諸費用シミュレーター</h2>
+            <div className="mb-5 flex flex-col">
+              <label htmlFor="">物件価格を入力してください。<span className="text-red-500">※必須</span></label>
+              <div>
+                <input type="text"  value={propertyPrice} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => handleChangePropertyPrice(e)}/>
+                <span className="pl-1">万円</span>
+              </div>
+            </div>
+            <div className="mb-5 flex flex-col">
+              <label htmlFor="">固定資産税評価額を入力してください。<span className="text-red-500">※必須</span></label>
+              <div>
+                <input type="text"  value={koteiShisanZeiHyoukaGaku} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => handleChangeKoteiShisanZeiHyoukaGaku(e)}/>
+                <span className="pl-1">万円</span>
+              </div>
+            </div>
+            {/* <button onClick={() => handleCalcResults()} className="mb-20 bg-sky-400 text-white px-5 py-2 rounded-2xl w-[340px]">計算結果を表示する</button> */}
+            <ButtonPrimary onClickFunc={handleCalcResults} label="計算結果を表示する"/>
+            {
+              propertyPrice && koteiShisanZeiHyoukaGaku && showResults && 
+              <>
+                <div className="flex flex-col items-center">
+                  <div className="flex bg-red-200 w-[340px] justify-between items-center">
+                    <p>仲介手数料</p>
+                    <p className=" text-2xl">{tyukai}万円</p>
+                  </div>
+                  <div className="bg-blue-200 flex justify-between w-[340px] items-center">
+                    <p>印紙税</p>
+                    <p className="text-2xl">{inshizei}万円</p>
+                  </div>
+                  <div className="bg-green-200 flex w-[340px] justify-between items-center">
+                    <p>司法書士報酬</p>
+                    <p className="text-2xl">{SHIHOUSHOSHI_HOUSYU}万円(仮)</p>
+                  </div>
+                  <div className="bg-yellow-200 flex justify-between w-[340px] items-center">
+                    <p>登録免許税</p>
+                    <p className="text-2xl ">{tourokumenkyozei}万円</p>
+                  </div>
+                  <div className=" bg-emerald-200 flex justify-between w-[340px] items-center">
+                    <p>不動産取得税</p>
+                    <p className="text-2xl">{hudousansyutokuzei}万円</p>
+                  </div>
 
-          <div className="text-center flex  mt-10  bg-red-300 ">
-            <div className="flex m-auto items-center">
-              <p className="font-semibold text-xl mr-5">諸費用合計:</p>
-              <p className="font-extrabold text-3xl">{totalResult}万円</p>
+                  <div className="text-center flex  mt-10  bg-red-300 ">
+                    <div className="flex m-auto items-center">
+                      <p className="font-semibold text-xl mr-5">諸費用合計:</p>
+                      <p className="font-extrabold text-3xl">{totalResult}万円</p>
+                    </div>
+                  </div>
+                  <div className="text-center flex  mt-10  bg-red-300 ">
+                    <div className="flex flex-col m-auto items-center">
+                      <p className="font-semibold text-xl mr-5">物件購入費用（売買価格 + 諸費用）合計:</p>
+                      <p className="font-extrabold text-3xl">{totalResult + propertyPrice}万円</p>
+                    </div>
+                  </div>
+                </div>
+                <Link href="#rimawari" className="text-sky-400">↓↓↓　実質利回りも計算する　↓↓↓</Link>
+              </>
+            }
+          </div>
+          <div id="rimawari" className="h-screen w-screen" >
+            <h2 className="">実質利回りシミュレーター</h2>
+              {/* //入力項目 : 月額家賃収入(必須)、管理費、固定資産税(必須)、都市計画税(必須)*/}
+            <div className="mb-5 flex flex-col">
+              <label htmlFor="">月額家賃収入を入力してください。<span className="text-red-500">※必須</span></label>
+              <div>
+                <input type="text"  value={monthlyRentIncome} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => setMonthlyRentIncome(Number(e.target.value))}/>
+                <span className="pl-1">万円</span>
+              </div>
+            
+              <label htmlFor="">管理費を入力してください。</label>
+              <div>
+                <input type="text"  value={managementFee} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => setManagementFee(Number(e.target.value))}/>
+                <span className="pl-1">万円</span>
+              </div>
+              <label htmlFor="">固定資産税を入力してください。<span className="text-red-500">※必須</span></label>
+              <div>
+                <input type="text"  value={fixedAssetTax} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => setFixedAssetTax(Number(e.target.value))}/>
+                <span className="pl-1">万円</span>
+              </div>
+              <label htmlFor="">都市計画税を入力してください。<span className="text-red-500">※必須</span></label>
+              <div>
+                <input type="text"  value={cityPlanningTax} placeholder="0" className="w-[300px] text-black border-2 rounded-2xl border-black px-5 py-1" onChange={(e) => setCityPlanningTax(Number(e.target.value))}/>
+                <span className="pl-1">万円</span>
+              </div>
+            </div>
+
+            <ButtonPrimary onClickFunc={calcRealRent} label="計算結果を表示する"/>
+            <div>
+              <p>{realRent}万円/年間</p>
+              <p>実質利回り：{realRateOfReturn}%</p>
             </div>
           </div>
-        </div>
+        </>
       }
     </main>
   )
