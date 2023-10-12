@@ -1,15 +1,11 @@
-import Link from "next/link";
-import { useEffect, useState } from "react"
-import { ButtonPrimary } from "../components/ButtonPrimary";
-import Header from "../components/Header";
-import ButtonWithBorder from "@/components/ButtonWithBorder";
-import Title from "@/components/Title";
+import { useState } from "react";
 
-export default function Home() {
-  const [propertyPrice, setPropertyPrice] = useState<number| undefined>();
-  const [koteiShisanZeiHyoukaGaku, setKoteiShisanZeiHyoukaGaku] = useState<number | undefined>();
+export const useRealRateOfReturn = () => {
+  const [propertyPrice, setPropertyPrice] = useState<number | undefined>(0);
+  const [koteiShisanZeiHyoukaGaku, setKoteiShisanZeiHyoukaGaku] = useState<number | undefined>(0);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [totalResult, setTotalResult] = useState<number>(0);
+  
 
   const [tyukai, setTyukai] = useState(0);
   const [inshizei, setInshizei] = useState(0);
@@ -17,27 +13,33 @@ export default function Home() {
   const [hudousansyutokuzei, setHudousansyutokuzei] = useState(0);
   const SHIHOUSHOSHI_HOUSYU = 5;
 
-  {/* //入力項目 : 月額家賃収入(必須)、管理費、固定資産税(必須)、都市計画税(必須)*/}
-  const [monthlyRentIncome, setMonthlyRentIncome] = useState<number | undefined>();
-  const [managementFee, setManagementFee] = useState<number | undefined>();
-  const [fixedAssetTax, setFixedAssetTax] = useState<number | undefined>();
-  const [cityPlanningTax, setCityPlanningTax] = useState<number | undefined>();
-  const [realRent, setRealRent] = useState<number | undefined>();
+  const numericRegex = /^[0-9\b]*$/;
 
-  const [realRateOfReturn, setRealRateOfReturn] = useState<number | undefined>();
+  const handleChangePropertyPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+    // e.target.valueが数値または空の場合以外、return
+    if (!numericRegex.test(e.target.value)) return;
 
-  useEffect(()=>{
-    setTotalResult(tyukai+inshizei+tourokumenkyozei+hudousansyutokuzei + SHIHOUSHOSHI_HOUSYU);
-  },[hudousansyutokuzei, inshizei, tourokumenkyozei, tyukai]);
+    // e.target.valueが空の場合、undefinedをセットしてリターン
+    if (e.target.value === "") {
+      setPropertyPrice(undefined);
+      return;
+    }
 
-  const convertManYenToYen = (manYen: number): number => {
-    return manYen*10000;
-  };
-  const convertYenToManYen = (yen: number): number => {
-    return yen/10000;
+    setPropertyPrice(Number(e.target.value));
   };
 
+  const handleChangeKoteiShisanZeiHyoukaGaku = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!numericRegex.test(e.target.value)) return;
 
+    // e.target.valueが空の場合、undefinedをセットしてリターン
+    if (e.target.value === "") {
+      setKoteiShisanZeiHyoukaGaku(undefined);
+      return;
+    }
+
+    setKoteiShisanZeiHyoukaGaku(Number(e.target.value));
+  };
 
   const calcTyukai = (): number| null => {
     if(!propertyPrice || propertyPrice < 0)return null;
@@ -64,8 +66,9 @@ export default function Home() {
     return result;
   };
 
-
-
+  const convertYenToManYen = (yen: number): number => {
+    return yen/10000;
+  };
 
   const calcInshizei = () => {
     if(!propertyPrice || propertyPrice < 0)return null;
@@ -125,15 +128,7 @@ export default function Home() {
     return result;
   };
 
-  const handleChangePropertyPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPropertyPrice(Number(e.target.value));
-  }
-
-  const handleChangeKoteiShisanZeiHyoukaGaku = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKoteiShisanZeiHyoukaGaku(Number(e.target.value));
-  };
-
-  const handleCalcResults = () => {
+  const handleCalcOtherExpenses = () => {
     calcTyukai();
     calcInshizei();
     calcTourokumenkyozei();
@@ -141,50 +136,40 @@ export default function Home() {
     setShowResults(true);
   };
 
-  const calcRealRateOfReturn = () => {
-    // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
-    // 実質購入費用 = 売買価格 + 諸費用
-    if(propertyPrice === undefined || propertyPrice < 0)return;
-    if(realRent === undefined || realRent < 0)return;
+  // const calcRealRateOfReturn = () => {
+  //   // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
+  //   // 実質購入費用 = 売買価格 + 諸費用
+  //   if(propertyPrice === undefined || propertyPrice < 0)return;
+  //   if(realRent === undefined || realRent < 0)return;
 
-    console.log("realRent", realRent);
-    setRealRateOfReturn(realRent / (propertyPrice + totalResult) * 100)
-    return 
+  //   console.log("realRent", realRent);
+  //   setRealRateOfReturn(realRent / (propertyPrice + totalResult) * 100)
+  //   return 
+  // };
+
+  // const calcRealRent = () => { 
+  //   if(monthlyRentIncome === undefined || monthlyRentIncome < 0)return;
+  //   if(managementFee === undefined || managementFee < 0)return;
+  //   if(fixedAssetTax === undefined || fixedAssetTax < 0)return;
+  //   if(cityPlanningTax === undefined || cityPlanningTax < 0)return;
+
+  //   const result = (monthlyRentIncome - managementFee)*12 - fixedAssetTax - cityPlanningTax;
+  //   setRealRent(result);
+  //   calcRealRateOfReturn();
+  // };
+
+  return {
+    propertyPrice,
+    setPropertyPrice,
+    handleChangePropertyPrice,
+    koteiShisanZeiHyoukaGaku,
+    handleChangeKoteiShisanZeiHyoukaGaku,
+    handleCalcOtherExpenses,
+    showResults,
+    tyukai,
+    inshizei,
+    tourokumenkyozei,
+    hudousansyutokuzei,
+    SHIHOUSHOSHI_HOUSYU,
   };
-
-  // 実質家賃収入を計算する関数
-  const calcRealRent = () => { 
-    if(monthlyRentIncome === undefined || monthlyRentIncome < 0)return;
-    if(managementFee === undefined || managementFee < 0)return;
-    if(fixedAssetTax === undefined || fixedAssetTax < 0)return;
-    if(cityPlanningTax === undefined || cityPlanningTax < 0)return;
-
-    const result = (monthlyRentIncome - managementFee)*12 - fixedAssetTax - cityPlanningTax;
-    setRealRent(result);
-    calcRealRateOfReturn();
-  };
-
-  // console.log(monthlyRentIncome);
-  // console.log(managementFee);
-  // console.log(fixedAssetTax);
-  // console.log(cityPlanningTax);
-
-
-  return (
-    <main
-      className={` `}
-    >
-      <Header/>
-      <Title text="何をミエルカしますか？"/>
-      <div className="flex flex-col h-[300px] justify-around items-center">
-        <Link href="/otherExpenses">
-          <ButtonWithBorder text="購入時の諸費用をミエルカ" />
-        </Link>
-
-        <Link href="/realRateOfReturn">
-          <ButtonWithBorder text="実質利回りをミエルカ" />
-        </Link>
-      </div>
-    </main>
-  )
-}
+};
