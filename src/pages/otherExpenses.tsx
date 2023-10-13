@@ -12,7 +12,6 @@ const OtherExpenses = () => {
     handleChangeKoteiShisanZeiHyoukaGaku,
     handleCalcOtherExpenses,
     showResults,
-    setShowResults,
     tyukai,
     inshizei,
     tourokumenkyozei,

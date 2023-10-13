@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import { Input } from "@/components/Input";
 import ResultDisplayWrapper from "@/components/ResultDisplayWrapper";
 import { StepBar } from "@/components/StepBar";
-import StemNumber from "@/components/StepNumber";
 import Title from "@/components/Title";
 import { useCalc } from "@/hooks/useCalc";
 import { useState } from "react";
@@ -34,9 +33,6 @@ const RealRateOfReturn = () => {
     setManagementFee,
     setFixedAssetTax,
     setCityPlanningTax,
-    setRealRent,
-    setRealRateOfReturn,
-    calcRealRateOfReturn,
     calcRealRent,
     handleChangeInputValue,
   } = useCalc();
