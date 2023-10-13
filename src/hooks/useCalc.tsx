@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
-export const useRealRateOfReturn = () => {
+export const useCalc = () => {
+  // 入力項目群１：物件価格、固定資産税評価額
   const [propertyPrice, setPropertyPrice] = useState<number | undefined>(0);
   const [koteiShisanZeiHyoukaGaku, setKoteiShisanZeiHyoukaGaku] = useState<number | undefined>(0);
-  const [showResults, setShowResults] = useState<boolean>(false);
-  const [totalResult, setTotalResult] = useState<number>(0);
-  
 
+  const [showResults, setShowResults] = useState<boolean>(false);
+  const [totalOfOtherExpenses, setTotalOfOtherExpenses] = useState<number>(0);
+  
+  // 諸費用(計算結果)
   const [tyukai, setTyukai] = useState(0);
   const [inshizei, setInshizei] = useState(0);
   const [tourokumenkyozei, setTourokumenkyozei] = useState(0);
   const [hudousansyutokuzei, setHudousansyutokuzei] = useState(0);
-  const SHIHOUSHOSHI_HOUSYU = 5;
+  const SHIHOUSHOSHI_HOUSYU = 12;
+
+  //入力項目 : 月額家賃収入(必須)、管理費、固定資産税(必須)、都市計画税(必須)
+  const [monthlyRentIncome, setMonthlyRentIncome] = useState<number | undefined>();
+  const [managementFee, setManagementFee] = useState<number | undefined>();
+  const [fixedAssetTax, setFixedAssetTax] = useState<number | undefined>();
+  const [cityPlanningTax, setCityPlanningTax] = useState<number | undefined>();
+  const [realRent, setRealRent] = useState<number | undefined>();
+
+  // 実質利回り
+  const [realRateOfReturn, setRealRateOfReturn] = useState<number | undefined>();
 
   const numericRegex = /^[0-9\b]*$/;
 
@@ -39,6 +51,20 @@ export const useRealRateOfReturn = () => {
     }
 
     setKoteiShisanZeiHyoukaGaku(Number(e.target.value));
+  };
+
+  const handleChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>,setState: (value: SetStateAction<number | undefined>) => void) => {
+  
+    // e.target.valueが数値または空の場合以外、return
+    if (!numericRegex.test(e.target.value)) return;
+
+    // e.target.valueが空の場合、undefinedをセットしてリターン
+    if (e.target.value === "") {
+      setState(undefined);
+      return;
+    }
+
+    setState(Number(e.target.value));
   };
 
   const calcTyukai = (): number| null => {
@@ -129,34 +155,51 @@ export const useRealRateOfReturn = () => {
   };
 
   const handleCalcOtherExpenses = () => {
+    console.log("諸費用計算開始")
     calcTyukai();
     calcInshizei();
     calcTourokumenkyozei();
     calcHudousanshutokuzei();
     setShowResults(true);
+    console.log("仲介手数料",tyukai);
+    console.log("印紙税",inshizei);
+    console.log("登録免許税",tourokumenkyozei);
+    console.log("不動産取得税",hudousansyutokuzei);
+    console.log("司法書士報酬",SHIHOUSHOSHI_HOUSYU);
   };
 
-  // const calcRealRateOfReturn = () => {
-  //   // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
-  //   // 実質購入費用 = 売買価格 + 諸費用
-  //   if(propertyPrice === undefined || propertyPrice < 0)return;
-  //   if(realRent === undefined || realRent < 0)return;
+  console.log("仲介手数料",tyukai);
+    console.log("印紙税",inshizei);
+    console.log("登録免許税",tourokumenkyozei);
+    console.log("不動産取得税",hudousansyutokuzei);
+    console.log("司法書士報酬",SHIHOUSHOSHI_HOUSYU);
 
-  //   console.log("realRent", realRent);
-  //   setRealRateOfReturn(realRent / (propertyPrice + totalResult) * 100)
-  //   return 
-  // };
+  const calcRealRateOfReturn = () => {
+    // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
+    // 実質購入費用 = 売買価格 + 諸費用
+    if(propertyPrice === undefined || propertyPrice < 0)return;
+    if(realRent === undefined || realRent < 0)return;
 
-  // const calcRealRent = () => { 
-  //   if(monthlyRentIncome === undefined || monthlyRentIncome < 0)return;
-  //   if(managementFee === undefined || managementFee < 0)return;
-  //   if(fixedAssetTax === undefined || fixedAssetTax < 0)return;
-  //   if(cityPlanningTax === undefined || cityPlanningTax < 0)return;
+    const totalOfOtherExpenses = tyukai + inshizei + tourokumenkyozei + hudousansyutokuzei + SHIHOUSHOSHI_HOUSYU
+    console.log("購入諸費用",totalOfOtherExpenses);
+    console.log("realRent", realRent);
 
-  //   const result = (monthlyRentIncome - managementFee)*12 - fixedAssetTax - cityPlanningTax;
-  //   setRealRent(result);
-  //   calcRealRateOfReturn();
-  // };
+    setShowResults(true);
+    setRealRateOfReturn(realRent / (propertyPrice + totalOfOtherExpenses) * 100)
+    return 
+  };
+
+  const calcRealRent = () => { 
+    console.log("HOGE")
+    if(monthlyRentIncome === undefined || monthlyRentIncome < 0)return;
+    if(managementFee === undefined || managementFee < 0)return;
+    if(fixedAssetTax === undefined || fixedAssetTax < 0)return;
+    if(cityPlanningTax === undefined || cityPlanningTax < 0)return;
+
+    const result = (monthlyRentIncome - managementFee)*12 - fixedAssetTax - cityPlanningTax;
+    setRealRent(result);
+    calcRealRateOfReturn();
+  };
 
   return {
     propertyPrice,
@@ -166,10 +209,27 @@ export const useRealRateOfReturn = () => {
     handleChangeKoteiShisanZeiHyoukaGaku,
     handleCalcOtherExpenses,
     showResults,
+    setShowResults,
     tyukai,
     inshizei,
     tourokumenkyozei,
     hudousansyutokuzei,
     SHIHOUSHOSHI_HOUSYU,
+    monthlyRentIncome,
+    calcRealRateOfReturn,
+    calcRealRent,
+    setMonthlyRentIncome,
+    managementFee,
+    setManagementFee,
+    fixedAssetTax,
+    setFixedAssetTax,
+    cityPlanningTax,
+    setCityPlanningTax,
+    realRent,
+    setRealRent,
+    realRateOfReturn,
+    setRealRateOfReturn,
+    handleChangeInputValue,
+
   };
 };

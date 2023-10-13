@@ -1,11 +1,14 @@
-import StemNumber from "./StepNumber";
+import StepNumber from "./StepNumber";
 
-export const StepBar = () => {
+type Props = {
+  currentStep: number;
+};
+export const StepBar = ({currentStep,}:Props) => {
   return (
     <div className="flex items-center justify-center">
-      <StemNumber stepNumber={1}/>
+      <StepNumber stepNumber={1} currentStep={currentStep}/>
       <div className="border-t  border-black w-16 h-0 "></div>
-      <StemNumber stepNumber={2}/>
+      <StepNumber stepNumber={2} currentStep={currentStep}/>
     </div>
   );
 };
