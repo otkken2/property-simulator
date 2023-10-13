@@ -184,8 +184,9 @@ export const useCalc = () => {
     console.log("購入諸費用",totalOfOtherExpenses);
     console.log("realRent", realRent);
 
+    const realRateOfReturn = realRent / (propertyPrice + totalOfOtherExpenses) * 100
     setShowResults(true);
-    setRealRateOfReturn(realRent / (propertyPrice + totalOfOtherExpenses) * 100)
+    setRealRateOfReturn(Math.floor((realRateOfReturn*100))/100);
     return 
   };
 
