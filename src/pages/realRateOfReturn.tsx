@@ -103,7 +103,7 @@ const RealRateOfReturn = () => {
         <>
           <h2 className="text-center mt-5">実質的な家賃収入をミエルカしよう。これで実質利回りもわかるよ</h2>
           <Input label="月額家賃収入" value={monthlyRentIncome} onChangeFunc={(e) => handleChangeInputValue(e, setMonthlyRentIncome)}/>
-          <Input label="管理費" value={managementFee} onChangeFunc={(e) => handleChangeInputValue(e, setManagementFee)}/>
+          <Input label="月額管理費" value={managementFee} onChangeFunc={(e) => handleChangeInputValue(e, setManagementFee)}/>
           <Input label="固定資産税" value={fixedAssetTax} onChangeFunc={(e) => handleChangeInputValue(e, setFixedAssetTax)}/>
           <Input label="都市計画税" value={cityPlanningTax} onChangeFunc={(e) => handleChangeInputValue(e, setCityPlanningTax)}/>
           <div className="w-full flex h-fit justify-center my-8">
