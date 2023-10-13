@@ -41,8 +41,8 @@ const RealRateOfReturn = () => {
     handleChangeInputValue,
   } = useCalc();
 
-  const handleChangeCurrentStep = () => {
-    setCurrentStep(prev => prev + 1);
+  const handleChangeCurrentStep = (step: number) => {
+    setCurrentStep(step);
     setShowResults(false);
   };
 
@@ -89,7 +89,7 @@ const RealRateOfReturn = () => {
                 </div>
               </ResultDisplayWrapper>
               <div className="flex flex-col items-center mt-10 w-[350px] m-auto">
-                <div onClick={() => handleChangeCurrentStep()} className="cursor-pointer bg-primary text-white w-[80px] h-[80px] rounded-full text-[60px] flex justify-center items-center">
+                <div onClick={() => handleChangeCurrentStep(2)} className="cursor-pointer bg-primary text-white w-[80px] h-[80px] rounded-full text-[60px] flex justify-center items-center">
                   ▶︎
                 </div>
                 <div className="">次へ</div>
@@ -124,6 +124,12 @@ const RealRateOfReturn = () => {
               </ResultDisplayWrapper>
             </>
           }
+          <div className="flex flex-col items-center mt-10 w-[350px] m-auto">
+            <div onClick={() => handleChangeCurrentStep(1)} className="cursor-pointer bg-primary text-white w-[80px] h-[80px] rounded-full text-[60px] flex justify-center items-center">
+            ◀︎
+            </div>
+            <div className="">戻る</div>
+          </div>
         </>
       }
     </div>
