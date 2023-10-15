@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta property='og:title' content="ミエルカ | 不動産投資の数字をミエルカするアプリ"/>
         <meta property='og:description' content='投資用不動産を買う時の諸費用・実質利回りを見える化するシミュレーターアプリ！'/>
+        <meta name="google-adsense-account" content="ca-pub-9291986532787497"></meta>
       </Head>
       <Component {...pageProps} />
       <Analytics/>
