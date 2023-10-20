@@ -3,6 +3,7 @@ import TermsInshizei from "@/components/terms/TermsInshizei";
 import TermsKanrihi from "@/components/terms/TermsKanrihi";
 import TermsKoteishisanzei from "@/components/terms/TermsKoteishisanzei";
 import TermsKoteishisanzeiHyoukagaku from "@/components/terms/TermsKoteishisanzeiHyoukagaku";
+import TermsShihoushoshihoushu from "@/components/terms/TermsShihoushoshihoushu";
 import TermsToshikeikakuzei from "@/components/terms/TermsTosikeikakuzei";
 import TermsTourokumenkyozei from "@/components/terms/TermsTourokumenkyozei";
 import TermsTyukaitesuryo from "@/components/terms/TermsTyukaitesuryo";
@@ -22,7 +23,7 @@ export const termsList: {name: string, description: JSX.Element}[] = [
   },
   {
     name:"司法書士報酬",
-    description: "司法書士報酬とは、司法書士に支払う報酬です。",
+    description: TermsShihoushoshihoushu(),
   },
   {
     name:"登録免許税",
