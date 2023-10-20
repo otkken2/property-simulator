@@ -20,7 +20,7 @@ const Terms = () => {
         {
           termsList.map((term,index) => {
             return (
-              <div key={index} className="flex flex-col items-center  mb-5 w-[800px] m-auto">
+              <div key={index} className="flex flex-col items-center  mb-10 w-[800px] m-auto">
                 <div 
                   className={`text-2xl w-full text-center cursor-pointer relative ${showingTerms.includes(index) ? "": "border-b"}`}
                   onClick={() => handleClickTerm(index)}
