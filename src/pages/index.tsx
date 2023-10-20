@@ -21,6 +21,11 @@ export default function Home() {
         <Link href="/realRateOfReturn">
           <ButtonWithBorder text="実質利回りをミエルカ" />
         </Link>
+
+        <Link href={"/terms"}>
+          <ButtonWithBorder text="用語集" />
+        </Link>
+
       </div>
     </main>
   )
