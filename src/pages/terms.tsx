@@ -30,7 +30,7 @@ const Terms = () => {
                 </div>
                 {
                   showingTerms.includes(index) &&
-                  <div className="text-sm bg-gray-200 p-6 rounded-3xl min-w-full">{term.description}</div>
+                  <div className="text-sm bg-gray-200 p-6 rounded-3xl min-w-full leading-8">{term.description}</div>
                 }
               </div>
             )
