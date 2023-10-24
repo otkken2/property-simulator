@@ -21,8 +21,6 @@ model SimulationResult {
   montthly_management_fee Decimal //月額管理費
   annual_property_tax Decimal //固定資産税
   urban_planninng_tax Decimal //都市計画税
-  net_rent_income Decimal //実質家賃収入
-  net_yield Decimal //実質利回り
   updated_at DateTime? @updatedAt
   createdAt DateTime @default(now())
 }
