@@ -12,17 +12,17 @@ datasource db {
 
 model SimulationResult {
   id        Int      @id @default(autoincrement())
-  user_id Int
-  user User @relation(fields: [user_id], references: [id])
+  user_id Int?
+  user User? @relation(fields: [user_id], references: [id])
   name String
-  propertyPrice Int
+  property_price Int
   property_tax_value Decimal //固定資産税評価額
   monthly_rent_income  Decimal //月額家賃収入
-  montthly_management_fee Decimal //月額管理費
+  monthly_management_fee Decimal //月額管理費
   annual_property_tax Decimal //固定資産税
-  urban_planninng_tax Decimal //都市計画税
+  urban_planning_tax Decimal //都市計画税
   updated_at DateTime? @updatedAt
-  createdAt DateTime @default(now())
+  created_at DateTime @default(now())
 }
 
 model User {
@@ -30,7 +30,7 @@ model User {
   email     String   @unique
   name      String?
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime? @updatedAt
   SimulationResult SimulationResult[]
 }
