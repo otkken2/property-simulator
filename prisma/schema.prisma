@@ -23,7 +23,7 @@ model SimulationResult {
   urban_planninng_tax Decimal //都市計画税
   net_rent_income Decimal //実質家賃収入
   net_yield Decimal //実質利回り
-  updated_at DateTime @updatedAt
+  updated_at DateTime? @updatedAt
   createdAt DateTime @default(now())
 }
 
