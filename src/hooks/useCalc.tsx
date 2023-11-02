@@ -168,11 +168,11 @@ export const useCalc = () => {
     console.log("司法書士報酬",SHIHOUSHOSHI_HOUSYU);
   };
 
-  console.log("仲介手数料",tyukai);
-    console.log("印紙税",inshizei);
-    console.log("登録免許税",tourokumenkyozei);
-    console.log("不動産取得税",hudousansyutokuzei);
-    console.log("司法書士報酬",SHIHOUSHOSHI_HOUSYU);
+  // console.log("仲介手数料",tyukai);
+  //   console.log("印紙税",inshizei);
+  //   console.log("登録免許税",tourokumenkyozei);
+  //   console.log("不動産取得税",hudousansyutokuzei);
+  //   console.log("司法書士報酬",SHIHOUSHOSHI_HOUSYU);
 
   const calcRealRateOfReturn = () => {
     // 実質利回り = 実質家賃収入 / 実質購入費用 * 100
@@ -231,6 +231,6 @@ export const useCalc = () => {
     realRateOfReturn,
     setRealRateOfReturn,
     handleChangeInputValue,
-
+    convertYenToManYen,
   };
 };
