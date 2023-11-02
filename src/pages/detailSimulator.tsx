@@ -81,6 +81,28 @@ const DetailSimulator = () => {
 
   console.log("減価償却費",annualDepreciation(115, 35, R_C));//減価償却費
 
+  function calculateAnnualRepayment(loanAmount: number, annualRate: number, years: number): number {
+    const monthlyInterestRate = annualRate / 12 / 100; // 月あたりの金利
+    const numberOfPayments = years * 12; // 総支払い回数
+  
+    // 月々の返済額を計算
+    const monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+    console.log(`月々の返済額は ${monthlyPayment} 円です。`)
+  
+    // 年間の返済額を計算
+    const annualPayment = monthlyPayment * 12;
+  
+    // 四捨五入して整数で返す
+    return Math.round(convertYenToManYen(annualPayment));
+  };
+
+  const principalAmount = 5820000; // 借入額: 582万円
+  const interestRate = 1.5;         // 年利: 1.5%
+  const loanPeriodYears = 35;     // ローン期間: 35年
+
+  const annualRepayment = calculateAnnualRepayment(principalAmount, interestRate, loanPeriodYears);
+  console.log(`年間の返済額は ${annualRepayment}万円です。`);
+
   return(
     <div>
       楽待シミュレーター
