@@ -81,6 +81,7 @@ const DetailSimulator = () => {
 
   console.log("減価償却費",annualDepreciation(115, 35, R_C));//減価償却費
 
+  //年間のローン返済額を算出 ※単位：引数のお金の単位は円(返り値は万円に変換)
   function calculateAnnualRepayment(loanAmount: number, annualRate: number, years: number): number {
     const monthlyInterestRate = annualRate / 12 / 100; // 月あたりの金利
     const numberOfPayments = years * 12; // 総支払い回数
@@ -102,6 +103,21 @@ const DetailSimulator = () => {
 
   const annualRepayment = calculateAnnualRepayment(principalAmount, interestRate, loanPeriodYears);
   console.log(`年間の返済額は ${annualRepayment}万円です。`);
+
+  // 購入時諸費用 ＝ 物件価格 × 7% ※単位：万円
+  const purchaseCost = (propertyPrice: number): number => {
+    console.log("テスト",propertyPrice * 0.07);
+    return Math.round(propertyPrice * 0.07);
+  };
+
+  console.log("購入時諸費用",purchaseCost(600));//購入時諸費用
+
+  //借入額(＝ 物件価格 ＋ 購入時諸費用 － 自己資金)　※単位：万円
+  const loanAmount = (propertyPrice: number, purchaseCost: number, ownMoney: number): number => {
+    const result = propertyPrice + purchaseCost - ownMoney;
+    return Math.round(result);
+  }
+  console.log("借入額",loanAmount(600, 42, 60));//借入額
 
   return(
     <div>
