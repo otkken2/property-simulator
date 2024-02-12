@@ -119,6 +119,62 @@ const DetailSimulator = () => {
   }
   console.log("借入額",loanAmount(600, 42, 60));//借入額
 
+  //固定資産税を簡易的に算出する(MEMO: 詳しく計算したい場合は、本アプリのメイン機能を流用できるようにするか？)
+  //物件価格 × 70% × 1.4%(あくまで目安)
+  const fixedAssetTax = (propertyPrice: number): number => {
+    return Math.round(propertyPrice * 0.7 * 0.014);
+  };
+
+  console.log("固定資産税",fixedAssetTax(600));//固定資産税
+
+  //都市計画税を簡易的に算出する(MEMO: 詳しく計算したい場合は、本アプリのメイン機能を流用できるようにするか？)
+  //物件価格 × 70% × 0.3%(あくまで目安)
+  const cityPlanningTax = (propertyPrice: number): number => {
+    return Math.round(propertyPrice * 0.7 * 0.003);
+  };
+
+  console.log("都市計画税",cityPlanningTax(600));//都市計画税
+
+  //実質年間収入(｛想定年間収入 － 想定年間収入 ×（家賃下落率 × 経過年数）｝× 入居率)
+  const realAnnualIncome = (annualIncome: number, annualIncomeDeclineRate: number, years: number, occupancyRate: number): number => {
+    const result = (annualIncome - annualIncome * (annualIncomeDeclineRate * years)) * occupancyRate;
+    //小数点第一位で四捨五入
+    return Math.round(result * 10) / 10;
+  };
+
+  console.log("実質年間収入(1年目)",realAnnualIncome(66, 0.001, 1, 0.95));//実質年間収入
+  console.log("実質年間収入(2年目)",realAnnualIncome(66, 0.001, 2, 0.95));//実質年間収入
+
+  //所得税率30%で税金を算出する(想定年間収入-経費)×30%
+  //ここでいう経費とは、管理費、修繕費、金利、減価償却費のことであると推測する。
+  const incomeTax = (annualIncome: number, expenditure: number): number => {
+    const result = (annualIncome - expenditure) * 0.3;
+    return Math.round(result * 10) / 10;
+  };
+
+  //支出(年間経費 ＋ 所得税等(法人税等) ＋ 大規模修繕費 ＋ ローン返済額)
+  const expenditure = (annualExpenses: number, incomeTax: number, largeScaleRepairCost: number, annualRepayment: number): number => {
+    const result = annualExpenses + incomeTax + largeScaleRepairCost + annualRepayment;
+    return Math.round(result * 10) / 10;
+  };
+
+  console.log("支出(1年目)",expenditure(9, 0, 0, 21));//支出
+  console.log(
+    "支出(2年目以降)",
+    expenditure(
+      9,
+      incomeTax(
+        realAnnualIncome(66,0.001,2,0.95),
+        2 + 6        
+      ),
+      0,
+      21
+    )
+    );//支出
+
+
+
+
   return(
     <div>
       楽待シミュレーター
