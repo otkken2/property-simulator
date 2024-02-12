@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import axios from "axios";
+import Header from "@/components/Header";
 
 const fetcher = (url:string) => axios.get(url).then(res => res.data);
 interface GetSimulationResults {
@@ -22,32 +23,14 @@ interface Props{
 };
 
 const MyPage = () => {
-
-  const { data: results, error }: Props= useSWR(`/api/simulationResults/${1}`,fetcher);
-  // const { data: results, error }= useSWR(`/api/simulationResults/${1}`,fetcher);
-  
-  if(error) return <div>failed to load</div>;
-  if(!results) return <div>loading...</div>;
-
-  console.log(results)
   return (
-    <div>
-      <h1>マイページ</h1>
-
-      <ul>
-        {results.map((result)=> {
-          return (
-            <div key={result.id}>
-              <li>{result.name}</li>
-              <li>{result.property_price}</li>
-              <li>{result.property_tax_value}</li>
-              <li>{result.monthly_rent_income}</li>
-              <li>{result.urban_planning_tax}</li>
-            </div>
-          );
-        })}
-      </ul>
-    </div>
+    <main>
+      <Header/>
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">マイページ</h1>
+        保存結果一覧
+      </div>
+    </main>
   );
 };
 

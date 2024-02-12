@@ -15,6 +15,7 @@ const config: Config = {
       },
       backgroundColor: {
         'primary': '#10E2FF',
+        'primaryOnHover': '#0DC1E3'
       },
       borderColor: {
         'primary': '#10E2FF',
