@@ -11,26 +11,25 @@ datasource db {
 }
 
 model SimulationResult {
-  id        Int      @id @default(autoincrement())
-  user_id Int?
-  user User? @relation(fields: [user_id], references: [id])
-  name String
-  property_price Int
-  property_tax_value Decimal //固定資産税評価額
-  monthly_rent_income  Decimal //月額家賃収入
+  id                    Int      @id @default(autoincrement())
+  user_email            String
+  name                  String
+  property_price        Int
+  property_tax_value    Decimal //固定資産税評価額
+  monthly_rent_income   Decimal //月額家賃収入
   monthly_management_fee Decimal //月額管理費
-  annual_property_tax Decimal //固定資産税
-  urban_planning_tax Decimal //都市計画税
-  updated_at DateTime? @updatedAt
-  created_at DateTime @default(now())
+  annual_property_tax   Decimal //固定資産税
+  urban_planning_tax    Decimal //都市計画税
+  updated_at            DateTime? @updatedAt
+  created_at            DateTime @default(now())
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  created_at DateTime @default(now())
-  updated_at DateTime? @updatedAt
-  SimulationResult SimulationResult[]
-}
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   name      String?
+//   password  String
+//   created_at DateTime @default(now())
+//   updated_at DateTime? @updatedAt
+//   SimulationResult SimulationResult[]
+// }

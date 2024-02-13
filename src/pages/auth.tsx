@@ -11,6 +11,7 @@ const Login = () => {
       signIn('google',{callbackUrl: '/'})
     }
   };
+
   return (
     <main className="h-screen flex justify-center items-center">
       <div className=" text-center h-72 flex flex-col justify-center items-center">
